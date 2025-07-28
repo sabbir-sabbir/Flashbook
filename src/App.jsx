@@ -1,8 +1,22 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from './pages/Home/HomePage';
+import LoginPage from './pages/auth/login/LoginPage';
+import RegistrationPage from './pages/auth/Register/RegistrationPage'
+import ProfilePage from './pages/profile/ProfilePage'
+import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
   return (
-    <div>App</div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/"  element={<HomePage/>} exact />
+      <Route path="/login"  element={<LoginPage/>} />
+      <Route path="/register"  element={<RegistrationPage/>} />
+      <Route path="/me"  element={<ProfilePage/>} />
+      <Route path="*"  element={<NotFoundPage/>} />
+    </Routes>
+    </BrowserRouter>
   )
 }
 
