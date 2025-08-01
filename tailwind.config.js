@@ -6,7 +6,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+       fontFamily: {
+        playwrite: ['"Playwrite AU SA"', 'cursive'],
+      },
+    },
   },
   plugins: [require("@tailwindcss/typography")],
 }

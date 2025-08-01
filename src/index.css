@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+AU+SA:wght@100..400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,4 +6,16 @@
 *{
     background-color: black;
     color: white;
+}
+
+.common {
+    @apply w-full h-auto  px-2 md:px-14 py-2
+}
+
+.nav-btn{
+    @apply flex items-center gap-1 pr-6 border-r-2 border-white hover:border-red-600 duration-500
+}
+
+.nav-btn-icon{
+    @apply w-8 h-8   p-1 rounded-sm hover:bg-neutral-700
 }

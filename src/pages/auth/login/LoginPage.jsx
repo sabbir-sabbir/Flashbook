@@ -1,19 +1,23 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import Field from "../../../components/common/Field";
+import {useNavigate} from 'react-router-dom'
+import { useForm } from "react-hook-form"
+import { useAuth } from "../../../hooks/useAuth";
 import loginpagepicture from "../../../assets/login-page-picture.svg";
 
 const LoginPage = () => {
+  const {setAuthState} = useAuth();
+   const navigate = useNavigate()
+
   // extracting useForm
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, formState: {errors} } = useForm();
 
   // submitFormData function
   const submitFormData = (formData) => {
     console.log(formData);
+    const user = {...formData};
+    setAuthState({user})
+    navigate("/")
+    
   };
   return (
     <>
@@ -36,13 +40,14 @@ const LoginPage = () => {
                 Email :
               </label>
               <input
-                {...register("email", { required: "Input a valid email" })}
-                className={` w-[450px]  p-1 border-2 outline-none bg-zinc-400${
+                {...register("email", { required: "Email is required" })}
+                className={` w-[450px]  p-1 border-2 outline-none  ${
                   errors.email ? "border-red-600" : "border-white"
-                }`}
+                } focus:bg-white/35 `}
                 type="email"
                 name="email"
                 id="email"
+                 required
                 placeholder="Entar your email address"
               />
             </div>
@@ -53,21 +58,30 @@ const LoginPage = () => {
               </label>
               <input
                 {...register("password", {
-                  required: "Input a valid password",
+                
                   minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters !",
+                    value: 8,
+                    message: "Password must be 8 characters.",
                   },
                 })}
-                className={` w-[450px]  p-1 border-2 outline-none bg-zinc-400${
-                  errors.email ? "border-red-600" : "border-white"
-                }`}
+                className={` w-[450px]  p-1 border-2 outline-none  ${
+                  errors.password ? "border-red-600" : "border-white"
+                } focus:bg-white/35  `}
                 type="password"
                 name="password"
                 id="password"
+                 required
                 placeholder="Entar your password"
+               
               />
             </div>
+
+            <button
+              className="w-[450px] h-auto bg-white text-black p-1 flex items-center justify-center"
+              type="submit"
+            >
+              Login
+            </button>
           </form>
         </div>
       </section>
