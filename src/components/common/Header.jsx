@@ -5,8 +5,10 @@ import { RiHome5Fill } from "react-icons/ri";
 import { RiNotification3Fill } from "react-icons/ri";
 import {Link} from 'react-router-dom'
 import Logout from '../../pages/auth/Logout/Logout';
+import {useAuth} from '../../hooks/useAuth'
 
 const Header = () => {
+  const {authState} = useAuth();
   return (
     <>
     <nav  className="common flex justify-between border-b-2 border-white ">
@@ -19,7 +21,7 @@ const Header = () => {
             <Link to="/" className="nav-btn !pl-6"> <RiHome5Fill className="nav-btn-icon" />Home</Link>
             <Link to="/" className="nav-btn"> <RiNotification3Fill className="nav-btn-icon" /></Link>
             <Logout/>
-            <Link to="/" className="nav-btn !pr-0 !border-r-0"> <img className="w-8 h-8 rounded-full bg-white " src={fakeuserimg} alt="User picture" /></Link>
+            <Link to="/me" className="nav-btn !pr-0 !border-r-0 flex items-center gap-2 "> <span>{authState?.user?.firstName}</span> <img className="w-8 h-8 rounded-full bg-white " src={fakeuserimg} alt="User picture" /></Link>
         </div>
     </nav>
     </>

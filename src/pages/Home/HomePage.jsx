@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth'
 
 const HomePage = () => {
   const {authState} = useAuth();
-  console.log(authState);
+  console.log(authState?.user?.firstName);
   
   return (
    <>

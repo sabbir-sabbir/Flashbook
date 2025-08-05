@@ -1,23 +1,48 @@
 import React from "react";
-import {useNavigate} from 'react-router-dom'
-import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import loginpagepicture from "../../../assets/login-page-picture.svg";
 
 const LoginPage = () => {
-  const {setAuthState} = useAuth();
-   const navigate = useNavigate()
+  const { setAuthState } = useAuth();
+  const navigate = useNavigate();
 
   // extracting useForm
-  const { register, handleSubmit, formState: {errors} } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm();
 
   // submitFormData function
-  const submitFormData = (formData) => {
-    console.log(formData);
-    const user = {...formData};
-    setAuthState({user})
-    navigate("/")
-    
+  const submitFormData = async (formData) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/login`,
+        formData
+      );
+      if(response.status === 200){
+        const {token, user} = response.data;
+        if(token){
+         const  authToken = token.token;
+         const refreshToken = token.refreshToken
+         console.log(`Login time authToken : ${authToken}`);
+          setAuthState({ user, authToken, refreshToken });
+           navigate("/");
+         
+        }
+      }
+     
+    } catch (errors) {
+      setError("root.random", {
+        type: "Random err",
+        message: `User email is not found ${formData.email}`
+      })
+      console.log(errors);
+    }
   };
   return (
     <>
@@ -47,7 +72,7 @@ const LoginPage = () => {
                 type="email"
                 name="email"
                 id="email"
-                 required
+                required
                 placeholder="Entar your email address"
               />
             </div>
@@ -58,7 +83,6 @@ const LoginPage = () => {
               </label>
               <input
                 {...register("password", {
-                
                   minLength: {
                     value: 8,
                     message: "Password must be 8 characters.",
@@ -70,9 +94,8 @@ const LoginPage = () => {
                 type="password"
                 name="password"
                 id="password"
-                 required
+                required
                 placeholder="Entar your password"
-               
               />
             </div>
 
@@ -82,6 +105,7 @@ const LoginPage = () => {
             >
               Login
             </button>
+            <p className="text-2xl bg-red-600">{errors?.root?.random?.message}</p>
           </form>
         </div>
       </section>
