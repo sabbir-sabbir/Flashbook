@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import loginpagepicture from "../../../assets/login-page-picture.svg";
-
+import { MdOutlineErrorOutline } from "react-icons/md";
 const LoginPage = () => {
   const { setAuthState } = useAuth();
   const navigate = useNavigate();
@@ -24,30 +24,28 @@ const LoginPage = () => {
         `${import.meta.env.VITE_SERVER_BASE_URL}/auth/login`,
         formData
       );
-      if(response.status === 200){
-        const {token, user} = response.data;
-        if(token){
-         const  authToken = token.token;
-         const refreshToken = token.refreshToken
-         console.log(`Login time authToken : ${authToken}`);
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        if (token) {
+          const authToken = token.token;
+          const refreshToken = token.refreshToken;
+          console.log(`Login time authToken : ${authToken}`);
           setAuthState({ user, authToken, refreshToken });
-           navigate("/");
-         
+          navigate("/");
         }
       }
-     
     } catch (errors) {
       setError("root.random", {
         type: "Random err",
-        message: `User email is not found ${formData.email}`
-      })
+        message: `This user is unavailable: ${formData.email}`,
+      });
       console.log(errors);
     }
   };
   return (
     <>
       <section className="w-full flex items-center justify-center gap-5 p-24 ">
-        <div className=" space-y-3 w-1/3 h-auto">
+        <div className=" hidden md:block space-y-3 w-1/3 h-auto">
           <img src={loginpagepicture} alt="loginpagepicture" />
           <h1>Flashbook</h1>
           <p>
@@ -66,7 +64,7 @@ const LoginPage = () => {
               </label>
               <input
                 {...register("email", { required: "Email is required" })}
-                className={` w-[450px]  p-1 border-2 outline-none  ${
+                className={` w-[350px] md:w-[450px]  p-1 border-2 outline-none  ${
                   errors.email ? "border-red-600" : "border-white"
                 } focus:bg-white/35 `}
                 type="email"
@@ -88,24 +86,31 @@ const LoginPage = () => {
                     message: "Password must be 8 characters.",
                   },
                 })}
-                className={` w-[450px]  p-1 border-2 outline-none  ${
+                className={`  w-[350px] md:w-[450px]  p-1 border-2 outline-none  ${
                   errors.password ? "border-red-600" : "border-white"
                 } focus:bg-white/35  `}
                 type="password"
                 name="password"
                 id="password"
                 required
-                placeholder="Entar your password"
+                placeholder="Enter your password"
               />
             </div>
 
             <button
-              className="w-[450px] h-auto bg-white text-black p-1 flex items-center justify-center"
+              className="  w-[350px] md:w-[450px] h-auto bg-white text-black p-1 flex items-center justify-center"
               type="submit"
             >
               Login
             </button>
-            <p className="text-2xl bg-red-600">{errors?.root?.random?.message}</p>
+            {errors?.root?.random?.message && (
+              <p className=" flex items-center gap-1  w-[350px] md:w-[450px] h-auto bg-[#001524]/55 p-1 text-[16px] border-[0.25px] border-red-500 tracking-wider text-white mt-3 rounded-md font-basic text-center ">
+                {errors?.root?.random?.message}{" "}
+                <span>
+                  <MdOutlineErrorOutline className="w-5 h-5 " />
+                </span>{" "}
+              </p>
+            )}
           </form>
         </div>
       </section>

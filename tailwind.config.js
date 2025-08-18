@@ -9,6 +9,9 @@ export default {
     extend: {
        fontFamily: {
         playwrite: ['"Playwrite AU SA"', 'cursive'],
+        basic: ['"Basic"', 'sans-serif'],
+        nova: ['"Nova Mono"', 'monospace'],
+        iceland: ['"Iceland"', 'sans-serif'],
       },
     },
   },

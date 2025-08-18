@@ -1,51 +1,50 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import useAxios from "../../hooks/useAxios.js";
 import { useAuth } from "../../hooks/useAuth.js";
+import { useProfile } from "../../hooks/useProfile.js";
+import { actions } from "../../actions/index.js";
+import Profileinfo from "../../components/profileComponents/Profileinfo.jsx";
+import Myposts from "../../components/profileComponents/Myposts.jsx";
 
 const ProfilePage = () => {
-  const {api} = useAxios(); 
+  const {  dispatch } = useProfile();
+  const { api } = useAxios();
   const { authState } = useAuth();
 
-  const [mainUser, setMainUser] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
   useEffect(() => {
-    if (!authState?.user?.id) return; 
+    if (!authState?.user?.id) return;
 
-    setLoading(true);
+    dispatch({ type: actions.profile.DATA_FETCHING });
+
     const fetchProfile = async () => {
       try {
         const response = await api.get(
           `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${authState?.user?.id}`
         );
 
-        setMainUser(response?.data?.user);
-        setPosts(response?.data?.posts);
-      } catch (err) {
-        console.error("Error fetching profile:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
+        if (response.status === 200) {
+          dispatch({
+            type: actions.profile.DATA_FETCHED,
+            data: response.data,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        dispatch({
+          type: actions.profile.DATA_FETCH_ERROR,
+          error: error.message,
+        });
       }
     };
 
     fetchProfile();
-  }, [authState?.user?.id]); // added dependency
-
-  
+  }, [authState?.user?.id]);
 
   return (
-    <div>
-      {loading && <p>Loading...</p>}
-
-      {!loading && mainUser && (
-        <p>{mainUser.firstName}</p>
-      )}
-
-      {error && <p className="text-red-500">Error loading profile</p>}
-    </div>
+    <>
+     <Profileinfo/>
+     <Myposts/>
+    </>
   );
 };
 
