@@ -12,12 +12,12 @@ const Myposts = () => {
     <>
     <section className="w-full h-auto px-2 md:px-14">
       <h1 className="text-xl  font-semibold font-basic tracking-wider">Your posts</h1>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         {posts && posts.map((post)=> (
-          <div className="p-2 bg-[#0d1321] rounded-sm" key={post.id}>
+          <div className="p-3 bg-[#0d1321] rounded-sm" key={post.id}>
                <PostHeader post={post}  />
-               <PostBody />
-               <PostActions />
+               <PostBody  poster={post?.image} content={post?.content} />
+               <PostActions postId={post?.id} commentCount={post?.comments?.length} />
                <PostComments />
           </div>
         ))
